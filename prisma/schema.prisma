@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  GENERAL
+  ADMIN
+  DRIVER
+  STORE_OWNER
+}
+
+model User {
+  id             String    @id @default(uuid())
+  userType       UserType  @default(GENERAL)
+  name           String?
+  address        String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  companyName    String?
+
+  coupone  Int[]
+  payMoney Int   @default(0)
+  mileage  Int   @default(0)
+
+  reviews  Review[]
+  accounts Account[]
+  products Product[]
+  orders   Orders[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// 주문 카테고리
+
+model Product {
+  id             String   @id @default(uuid())
+  categoryId     String
+  userId         String
+  name           String
+  description    String
+  previewImage   String[]
+  price          Int
+  deliveryCharge Int      @default(0)
+  salesLimit     Int      @default(9999)
+  images         String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  reviews Review[]
+  orders  Orders[]
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([userId])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  productId String
+  userId    String
+  content   String   @db.Text
+  socore    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  images    String[]
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+
+  products Product[]
+}
+
+enum DelivaryStatus {
+  READY
+  START
+  END
+  CANCEL
+}
+
+model Orders {
+  id             String         @id @default(uuid())
+  productId      String
+  userId         String
+  deliveryStatus DelivaryStatus
+  count          Int            @default(1)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  request        String?
+  receive        String?
+  history        String[]
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+}

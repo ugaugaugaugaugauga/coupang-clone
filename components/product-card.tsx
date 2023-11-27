@@ -42,7 +42,7 @@ const ProductCard = ({
         <PlusCircle />
       </button>
 
-      <Card role='button' className='border-none shadow-none'>
+      <Card role='button' className='border-none shadow-none bg-transparent'>
         <CardHeader className='p-0'>
           <CardContent>
             <div className='relative w-full h-52'>

@@ -58,7 +58,7 @@ const BottomNavigation = () => {
           onClick={() => {
             handleScroll('left')
           }}
-          className='z-50 w-auto absolute left-0 top-[63px] bg-white/90 rounded-full'
+          className='z-50 w-auto absolute left-0 top-[63px] bg-white/90 dark:bg-zinc-700/90 rounded-full'
         >
           <ChevronLeft />
         </button>
@@ -68,7 +68,7 @@ const BottomNavigation = () => {
           onClick={() => {
             handleScroll('right')
           }}
-          className='z-50 w-auto absolute right-0 top-[63px] bg-white/90 rounded-full'
+          className='z-50 w-auto absolute right-0 top-[63px] bg-white/90 dark:bg-zinc-700/90 rounded-full'
         >
           <ChevronRight />
         </button>

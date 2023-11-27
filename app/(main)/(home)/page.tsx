@@ -4,7 +4,7 @@ import { Briefcase } from 'lucide-react'
 
 const MainPage = () => {
   return (
-    <main>
+    <main className='dark:bg-zinc-700'>
       <Hero />
       <AdProducts title='오늘의 쇼핑 제안' />
       <AdProducts title='좋아할만한 브랜드 상품' />
